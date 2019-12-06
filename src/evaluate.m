@@ -11,7 +11,7 @@ function evaluation = evaluate()
     data = data(idxFirst:idxLast,:);
     
     %Compute metrics over synchronized data
-    evaluation.predictionMetrics.RMSE = sqrt(mean((data.Glucose_cgmData-data.Glucose_cgmDataPred).^2));
+    evaluation.predictionMetrics.RMSE = sqrt(nanmean((data.Glucose_cgmData-data.Glucose_cgmDataPred).^2));
     
     %Compute statistics
     evaluation.stats.nanNumerosity = sum(isnan(data.Glucose_cgmDataPred));
