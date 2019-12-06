@@ -1,4 +1,4 @@
-function Time = retainData(cgmData,PH)
+function retainData(cgmData,PH)
 %retainData is a function that safely retain CGM data to be used during the
 %evaluation of the user-defined glucose prediction algorithm
 %Input:
@@ -48,13 +48,25 @@ function Time = retainData(cgmData,PH)
     end
     % =====================================================================
     
-    % =============== Return cgmData.Time and retain cgmData and PH =======
+    % == Return cgmData.Time and retain cgmData, PH and currentTimeIndex ==
+    
+    %if a temporary directory exists yet, wipe it
     if(exist('temp'))
        rmdir('temp','s');
     end 
     mkdir('temp');
-        
+    
+    %initialize currentTimeIndex
+    currentTimeIndex = 0;
+    
+    %save
     save(fullfile('temp','cgmDataRetained'), 'cgmData','PH');
-    Time = cgmData.Time;
+    save(fullfile('temp','currentTimeIndex'), 'currentTimeIndex');
+    
+    % ==== Initialize cgmDataPred vector ==================================
+    cgmDataPred = cgmData;
+    cgmDataPred.Time = cgmDataPred.Time + minutes(PH);
+    cgmDataPred.Glucose(:) = nan;
+    save(fullfile('temp','cgmDataPred'),'cgmDataPred');
     % =====================================================================
 end

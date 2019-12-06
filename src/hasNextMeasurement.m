@@ -1,16 +1,15 @@
 function hasIt = hasNextMeasurement()
 
-
+    %check whether the toolbox has been initialized
     if(~exist("temp"))
     	error("nextMeasurement: No cgmData are currently retained.");
     end
-    if(~exist(fullfile("temp","currentTimeIndex.mat")))
-        error("nextMeasurement: No measurements have been initialized.");
-    end
     
-    load(fullfile('temp','currentTimeIndex'));
+    %load retained data
     load(fullfile('temp','cgmDataRetained'));
+    load(fullfile('temp','currentTimeIndex'));
     
+    %check for data availability
     if(currentTimeIndex < height(cgmData))
         hasIt = 1;
     else

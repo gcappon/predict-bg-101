@@ -7,12 +7,9 @@
     
 % =========================================================================
 
-%% ============== Step 0a: Load CGM data to test your algorithm on ========
+%% ============== Step 0: Load CGM data to test your algorithm on ========
     load(fullfile('data','data'));
-% =========================================================================
-
-%% ============== Step 0b: Load your prediction model ============+========
-    load(fullfile('model','predictionModel'));
+    cgmData = cgmData(1:288,:);
 % =========================================================================
 
 %% ============== Step 1: Retain data and set PH ==========================
@@ -21,28 +18,37 @@
 % =========================================================================
 
 %% ============== Step 2: Obtain the first measurement ====================
-    [time0, cgm0] = nextMeasurement('init');
-    availableCgmMeas = [cgm0];
-    availableTime = [time0];
-    availableDataCount = 1;
+    availableCgmMeas = [];
+    availableTime = [];
+    availableDataCount = 0;
 % =========================================================================
    
-%% ============== Step 3: Do predictions until data are available =========
+%% == Step 3: Do predictions until data are available, and store them =====
     
-
     while(hasNextMeasurement())
-
+        
+        %Obtain next cgm measurement
+        [nextTime, nextCgm] = nextMeasurement();
+        
         % =========  Insert here the prediction "logic" =======================
-        cgmPred = availableCgmMeas(availableDataCount) + 1; %really dumb logic
-        timePred = availableTime(availableDataCount);
-        % =====================================================================
-
-        %obtain next cgm measurement
-        [nextTime, nextCgm] = nextMeasurement("prediction",cgmPred,timePred);
         availableCgmMeas = [availableCgmMeas nextCgm];
         availableTime = [availableTime nextTime];
-        availableDataCount = availableDataCount + 1
-
+        availableDataCount = availableDataCount + 1;
+        
+        cgmPred = availableCgmMeas(availableDataCount) + 1; %really dumb logic
+        timePred = availableTime(availableDataCount)+minutes(30);
+        % =====================================================================
+        
+        %Store prediction
+        storePrediction(timePred,cgmPred);
+        
     end
+
+% =========================================================================
+   
+%% ============== Step 4: Evaluate your prediction model ==================
+    evaluation = evaluate();
+    plotResults();
+% =========================================================================
 
 
