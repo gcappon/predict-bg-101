@@ -22,7 +22,13 @@ function evaluation = evaluate()
        mkdir('results');
     end 
     
+    %Clear temporary data
+    if(exist('temp'))
+       rmdir('temp','s');
+    end
+    
     %Store evaluation for analysis
     save(fullfile('results','evaluation'),'evaluation');
+    save(fullfile('results','cgmDataPred'),'cgmDataPred');
     
 end

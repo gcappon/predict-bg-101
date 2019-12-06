@@ -9,7 +9,7 @@
 
 %% ============== Step 0: Load CGM data to test your algorithm on ========
     load(fullfile('data','data'));
-    cgmData = cgmData(1:288,:);
+    cgmData = cgmData(1:288*7,:);
 % =========================================================================
 
 %% ============== Step 1: Retain data and set PH ==========================
@@ -35,8 +35,9 @@
         availableTime = [availableTime nextTime];
         availableDataCount = availableDataCount + 1;
         
+        cgmPred = availableCgmMeas(availableDataCount) + (0.01*availableCgmMeas(availableDataCount))*randn(1); %really dumb logic
         cgmPred = availableCgmMeas(availableDataCount) + 1; %really dumb logic
-        timePred = availableTime(availableDataCount)+minutes(30);
+        timePred = availableTime(availableDataCount)+minutes(PH);
         % =====================================================================
         
         %Store prediction
@@ -47,8 +48,7 @@
 % =========================================================================
    
 %% ============== Step 4: Evaluate your prediction model ==================
-    evaluation = evaluate();
     plotResults();
+    evaluation = evaluate();
 % =========================================================================
-
 
